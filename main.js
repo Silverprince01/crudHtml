@@ -41,7 +41,40 @@ const inputValues = [
   },
 ];
 
+// html elements
+
+//creating the form values and appending accordingly
+
+const form = document.getElementById("dynamicForm");
+const button = document.createElement("button");
+
+button.className = "btn";
+button.innerText = "Submit";
+button.type = "submit";
+
+inputValues.forEach((input) => {
+  const inputField = document.createElement("input");
+  const label = document.createElement("label");
+  const inputCont = document.createElement("div");
+  inputField.setAttribute("type", input.type);
+  inputField.setAttribute("class", `input_class_${input.id}`);
+  inputField.setAttribute("id", `${input.label.split(" ").join("")}`);
+  inputField.setAttribute("name", `input_${input.id}`);
+  label.innerHTML = `${input.label}:`;
+  inputCont.appendChild(label);
+  inputCont.appendChild(inputField);
+  inputCont.className = "inputCon";
+  form.appendChild(inputCont);
+
+  inputField.addEventListener("input", () => {
+    handleChange();
+  });
+});
+form.appendChild(button);
+
+//elements to view the inputted values
 const formData = {};
+// retrieveing the stored data
 const financeData = JSON.parse(localStorage.getItem("testStorageJS"));
 
 const financeTag = document.querySelector("#financeData");
@@ -50,7 +83,7 @@ let noDataText = document.createElement("p");
 noDataText.innerText = "No Financial Record found";
 noData.appendChild(noDataText);
 console.log(financeData);
-financeData === null
+financeData === null || financeData.length == 0
   ? financeTag.appendChild(noData)
   : financeData?.forEach((finance) => {
       const div = document.createElement("div");
@@ -75,40 +108,7 @@ financeData === null
       financeTag.appendChild(div);
     });
 
-//creating the form values and appending accordingly
-const form = document.getElementById("dynamicForm");
-
-const button = document.createElement("button");
-button.className = "btn";
-button.innerText = "Submit";
-button.type = "submit";
-function handleChange() {
-  const inputClass = document.querySelectorAll("#dynamicForm input");
-  formData.id = uniqueId;
-  inputClass.forEach((input) => {
-    formData[input.id] = input.value;
-  });
-}
-
-inputValues.forEach((input) => {
-  const inputField = document.createElement("input");
-  const label = document.createElement("label");
-  const inputCont = document.createElement("div");
-  inputField.setAttribute("type", input.type);
-  inputField.setAttribute("class", `input_class_${input.id}`);
-  inputField.setAttribute("id", `${input.label.split(" ").join("")}`);
-  inputField.setAttribute("name", `input_${input.id}`);
-  label.innerHTML = `${input.label}:`;
-  inputCont.appendChild(label);
-  inputCont.appendChild(inputField);
-  inputCont.className = "inputCon";
-  form.appendChild(inputCont);
-
-  inputField.addEventListener("input", () => {
-    handleChange();
-  });
-});
-form.appendChild(button);
+// functions
 
 //generating a unique Id
 function generateUniqueId() {
@@ -125,44 +125,16 @@ function generateUniqueId() {
 }
 const uniqueId = generateUniqueId();
 
-//   formValue.id = uniqueId;
-
-const storedData = JSON.parse(localStorage.getItem("testStorageJS")) || [];
-
-button.addEventListener("click", async (e) => {
-  e.preventDefault();
-  const { isValid } = await validateForm();
-  console.log(isValid);
-
-  if (isValid) {
-    const updateData = [...storedData, formData];
-    localStorage.setItem("testStorageJS", JSON.stringify(updateData));
-    window.location.reload();
-  } else {
-    console.log("no");
-  }
-});
-
-const handleEdit = async (singleData) => {
-  try {
-    const updatedData = await JSON.parse(
-      localStorage.getItem("testStorageJS")
-    ).map((item) => {
-      if (item.id === singleData.id) {
-        return singleData;
-      }
-      return item;
-    });
-    localStorage.setItem("testStorageJS", JSON.stringify(updatedData));
-    alert("Successfully updated");
-  } catch (error) {
-    alert(error);
-  }
-};
+function handleChange() {
+  const inputClass = document.querySelectorAll("#dynamicForm input");
+  formData.id = uniqueId;
+  inputClass.forEach((input) => {
+    formData[input.id] = input.value;
+  });
+}
 
 // validateform
 const validateForm = async () => {
-  const form = document.getElementById("dynamicForm");
   let isValid = true;
   // Iterate over each input field
   inputValues.forEach((input) => {
@@ -195,3 +167,22 @@ const validateForm = async () => {
 
   return { isValid };
 };
+
+const storedData = JSON.parse(localStorage.getItem("testStorageJS")) || [];
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  const { isValid } = await validateForm();
+  console.log(isValid);
+
+  if (isValid) {
+    const updateData = [...storedData, formData];
+    localStorage.setItem("testStorageJS", JSON.stringify(updateData));
+    alert("Record Uploaded");
+    window.location.reload();
+  } else {
+    console.log("no");
+  }
+};
+
+//event listener
+button.addEventListener("click", handleSubmit);

@@ -53,6 +53,9 @@ const delButton = document.createElement("button");
 delButton.innerText = "Delete";
 const form = document.getElementById("dynamicForm");
 form.appendChild(delButton);
+
+
+
 const getSingleToEdit = () => {
   function handleChange() {
     const inputClass = document.querySelectorAll("#dynamicForm input");
@@ -88,29 +91,12 @@ const getSingleToEdit = () => {
   });
 
   const btmContainer = document.createElement("div");
-  btmContainer.className = "btmContainer"
+  btmContainer.className = "btmContainer";
   btmContainer.appendChild(button);
   btmContainer.appendChild(delButton);
   form.appendChild(btmContainer);
-
-  console.log(singleData);
 };
 
-getSingleToEdit();
-
-button.addEventListener("click", async (e) => {
-  e.preventDefault();
-  await handleEdit(singleData);
-  window.location.href = "index.html";
-});
-
-delButton.addEventListener("click", async (e) => {
-  e.preventDefault();
-  await deleteItem(singleData);
-  window.location.href = "index.html";
-});
-
-console.log(window.location.href);
 const handleEdit = async (singleData) => {
   try {
     const updatedData = await JSON.parse(
@@ -139,3 +125,22 @@ const deleteItem = async (singleData) => {
     console.log(error);
   }
 };
+
+const edit = async (e) => {
+  e.preventDefault();
+  await handleEdit(singleData);
+  window.location.href = "index.html";
+};
+
+const delet = async (e) => {
+  e.preventDefault();
+  await deleteItem(singleData);
+  window.location.href = "index.html";
+};
+
+// functionRender
+getSingleToEdit();
+//event listeners
+delButton.addEventListener("click", delet);
+
+button.addEventListener("click", edit);

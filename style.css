@@ -37,7 +37,15 @@ input {
   box-shadow: 5px 10px 18px #888888;
   border-radius: 8px;
 }
-
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+/* For Internet Explorer */
+input[type="number"] {
+  -ms-inner-appearance: none;
+}
 button {
   border-radius: 8px;
   border: 0;
@@ -102,13 +110,36 @@ button {
     text-decoration: none;
 }  */
 
-@media screen and (min-width: 624px) {
-  .inputCon {
-    width: 100%;
+@media screen and (min-width: 900px) {
+    #dynamicForm {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(2, 20%);
+      align-items: center;
+      justify-content: space-evenly;
+    }
   }
-  #dynamicForm {
-    display: grid;
-    grid-template-columns: repeat(4, 25%);
-    justify-content: center;
+  
+  @media screen and (min-width: 724px) {
+    .inputCon {
+      width: 100%;
+    }
+    h3 {
+      text-align: center;
+    }
+    
+  
+    .finance {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      /* margin: 0, auto; */
+    }
+    
+    #financeData{
+      width: 60%;
+  
+    }
   }
-}
+  
